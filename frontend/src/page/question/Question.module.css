@@ -1,0 +1,61 @@
+.Question h1{
+margin-left: 40%;
+}
+.Question p{
+    margin-left: 40%;
+}
+
+
+.ask{
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    margin: 0 15%;
+    padding: 20px 0;
+    border-radius: 10px;
+}
+.ask_public_question{
+    text-align: center;
+}
+.ask_public_question .link{
+    text-decoration: none;
+    color: black;
+}
+.ask_form{
+width: 95%;
+margin-left: 2%;
+}
+.ask_form input{
+border-radius: 10px;
+}
+.ask_form textarea {
+    width: 98%;
+}
+.ask_form textarea{
+border-radius: 10px;
+padding: 10px;
+}
+
+.btn{
+    background-color: #0B5ED7;border-radius: 5px;
+    width: 160px;
+}
+
+@media screen and (max-width: 750px) {
+    .Question h1{
+margin-top: 130px;
+}
+    .Question h1{
+margin-left: 8%;
+}
+.Question p{
+    margin-left: 8%;
+}
+    .ask_form{
+width: 80%;
+height: 220px;
+margin-left: 8%;
+}
+
+.ask_form textarea {
+    width: 95%;
+}
+}

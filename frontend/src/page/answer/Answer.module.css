@@ -1,0 +1,83 @@
+.title{
+    margin-left: 80px;
+}
+
+.Question1{
+    color: rgb(238, 0, 255);
+}
+.Question h1{
+margin-left: 40%;
+}
+.Question p{
+    margin-left: 40%;
+}
+hr{
+    width: 85%;
+}
+
+.answersFromCommunity{
+    padding: 10px 0;
+}
+
+.userAnswer{
+    display: flex;
+    gap: 120px;
+    border-bottom: 1px solid black;
+    width: 85%;
+}
+.circle{
+    margin-top: 10px;
+}
+
+.userAnswer h2{
+    margin-left: 9px;
+}
+
+.userAnswer div h4 {
+margin-top: -45px;
+}
+
+.answer{
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    margin: 0 15%;
+    margin-top: 190px;
+    padding: 20px 0;
+}
+.answer_public_question{
+    text-align: center;
+}
+.answer_public_question .link{
+    text-decoration: none;
+    color: black;
+}
+.answer_form{
+width: 94%;
+margin-left: 10px;
+}
+.answer_form input{
+border-radius: 10px;
+}
+.answer_form textarea {
+    width: 98%;
+}
+.answer_form textarea{
+border-radius: 10px;
+padding: 10px;
+}
+
+.btn{
+    background-color: #0B5ED7;border-radius: 5px;
+    width: 160px;
+}
+
+@media screen and (max-width: 700px) {
+    .answer{
+        width: 400px;
+        height: 300px;
+    }
+    .answer_form{
+    width: 350px;
+    margin: auto;
+}
+    
+}
