@@ -1,58 +1,73 @@
-
 import style from "./Answer.module.css";
 import Header from "../header/Header";
 import React, { useState, useEffect, useContext } from "react";
 import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-
 import axios from "../../axios/axiosConfig";
 import { AppState } from "../../App";
 import Footer from "../footer/Footer";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa";
 
-
 export default function Answer() {
   const { user } = useContext(AppState);
   const [answers, setAnswers] = useState([]);
   const [newAnswer, setNewAnswer] = useState("");
-  // const [getuser, setgetuser] = useState([]);
   const answerDom = useRef();
   const { questionid } = useParams();
-  const [question, setQuestion] = useState({}); // Initialize as an object
+  const [question, setQuestion] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isTextAreaEmpty, setIsTextAreaEmpty] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch answers with associated user information
+        // Fetch answers from the server
         const response = await axios.get(
-          `http://localhost:5500/api/answers/getallanswer/${questionid}` // Include questionid
+          `http://localhost:5500/api/answers/getallanswer/${questionid}`
         );
-        setAnswers(response.data);
 
-        // Fetch the specific question details
+        // Fetch question details
         const questionResponse = await axios.get(
           "http://localhost:5500/api/questions/getallquestions"
         );
-        let singleQuestion = questionResponse.data.find(
+        const singleQuestion = questionResponse.data.find(
           (question) => question.questionid === questionid
-        )
-         setQuestion(singleQuestion);
+        );
+        setQuestion(singleQuestion);
+
+        // Fetch answers from localStorage
+        const storedAnswers = JSON.parse(
+          localStorage.getItem("answers") || "{}"
+        );
+
+        // Merge server and localStorage answers, giving priority to localStorage
+        const combinedAnswers = [
+          ...(storedAnswers[questionid] || []),
+          ...response.data.filter(
+            (answer) =>
+              !(storedAnswers[questionid] || []).some(
+                (storedAnswer) => storedAnswer.answer === answer.answer
+              )
+          ),
+        ];
+
+        setAnswers(combinedAnswers);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, []); // Fetch data when questionid changes
+  }, [questionid]);
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const answerValue = answerDom.current.value;
 
     if (!answerValue) {
-      alert("Please provide all required information");
+      setIsTextAreaEmpty(true);
       return;
     }
 
@@ -64,17 +79,29 @@ export default function Answer() {
           userid: user.userid,
         }
       );
-      alert("Answer posted successfully!");
 
-      // Refresh answers after posting
+      const newAnswerData = {
+        answer: answerValue,
+        username: user.username,
+      };
 
-      // Clear the input field after posting answer
+      // Update answers in state and localStorage
+      const updatedAnswers = [newAnswerData, ...answers];
+      const storedAnswers = JSON.parse(localStorage.getItem("answers") || "{}");
+      storedAnswers[questionid] = updatedAnswers;
+      localStorage.setItem("answers", JSON.stringify(storedAnswers));
+
+      setAnswers(updatedAnswers);
       setNewAnswer("");
+
+      setSuccessMessage("Answer posted successfully!");
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);
     } catch (error) {
       console.error("Error posting answer:", error);
     }
-  }
-  console.log(question);
+  };
 
   return (
     <div>
@@ -85,7 +112,6 @@ export default function Answer() {
         <h1 className={style.Question1}>
           <FaArrowRight size={12} /> {question.title}
         </h1>
-
         <h3 className={style.Question1} style={{ padding: "10px 0" }}>
           <FaArrowRight size={12} /> {question.description}
         </h3>
@@ -96,22 +122,16 @@ export default function Answer() {
         <hr />
         <ul>
           <br />
-          {answers.map((answer, question, index) => (
+          {answers.map((answer, index) => (
             <div key={index}>
-              <div key={question.questionId}>
+              <div key={index}>
                 <div>
                   <div className={style.circle}>
                     <FaRegUserCircle className={style.icon} size={70} />
                   </div>
-
-                  {/* <h3 style={{ marginLeft: "15px" }}>
-                    
-                    {getuser.find((user) => user.userid === question.userid)
-                      ?.username || "Unknown"}
-                  </h3> */}
                 </div>
               </div>
-              <li className={style.userAnswer} key={answer.answerid}>
+              <li className={style.userAnswer} key={index}>
                 <h2>{answer.username}</h2>
                 <div>
                   <h4>{answer.answer}</h4>
@@ -124,8 +144,23 @@ export default function Answer() {
       <div className={style.answer}>
         <div className={style.answer_public_question}>
           <h1>Answer the top question</h1>
+          {successMessage && (
+            <h3
+              style={{
+                color: "green",
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
+            >
+              {successMessage}
+            </h3>
+          )}
           <br />
-          <Link className={style.link} to="/">
+          <Link
+            style={{ color: "purple", fontSize: "20px", fontWeight: "bold" }}
+            className={style.link}
+            to="/"
+          >
             Go to question page
           </Link>
         </div>
@@ -135,13 +170,19 @@ export default function Answer() {
           <form onSubmit={handleSubmit}>
             <textarea
               ref={answerDom}
-              onChange={(e) => setNewAnswer(e.target.value)}
+              onChange={(e) => {
+                setNewAnswer(e.target.value);
+                setIsTextAreaEmpty(e.target.value === "");
+              }}
               value={newAnswer}
               rows="7"
               placeholder="Your answer"
+              style={{ borderColor: isTextAreaEmpty ? "red" : "" }}
             ></textarea>
             <br />
-            <button className={style.btn} type="submit">Post your Answer</button>
+            <button className={style.btn} type="submit">
+              Post your Answer
+            </button>
           </form>
         </div>
       </div>
@@ -149,4 +190,5 @@ export default function Answer() {
     </div>
   );
 }
+
 // git checkuot -b hi

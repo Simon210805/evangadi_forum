@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import axios from "../../axios/axiosConfig";
 import { FaRegUserCircle } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
-import { FaSearch } from "react-icons/fa"; 
+import { FaSearch } from "react-icons/fa";
 import Footer from "../footer/Footer";
 
 function Home() {
@@ -28,7 +28,7 @@ function Home() {
         const questionResponse = await axios.get(
           "http://localhost:5500/api/questions/getallquestions"
         );
-        const questionData = questionResponse.data;
+        const questionData = questionResponse.data.reverse(); // Reverse once here
 
         // Update state with users and questions
         setgetuser(userData);
@@ -45,12 +45,10 @@ function Home() {
   const filteredQuestions = userdata.filter((question) =>
     question.title.toLowerCase().includes(search.toLowerCase())
   );
-console.log(userdata)
+
   return (
     <div>
-      <div>
-        <Header />
-      </div>
+      <Header />
       <hr />
       <br />
       <div className={style.container}>
@@ -59,8 +57,7 @@ console.log(userdata)
             Ask Question
           </Link>
           <div className={style.welcome}>
-            <h2> welcome, {user.username}!</h2>
-            {/* <h2> welcome </h2> */}
+            <h2>Welcome, {user.username}!</h2>
           </div>
         </div>
 
@@ -69,49 +66,38 @@ console.log(userdata)
         <div className={style.question_header}>
           <h1>Questions</h1>
           <div className={style.search}>
-            <div className={style.search}>
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search questions..."
-                className=""
-              />
-              <FaSearch className={style["search-icon"]} />
-            </div>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search questions..."
+              className=""
+            />
+            <FaSearch className={style["search-icon"]} />
           </div>
         </div>
         <br />
         <div className={style.quesion}>
           {filteredQuestions.map((question, index) => (
-            <div key={index}>
-            <div key={question.questionId}>
-              <div className={style.quesion_container}>
-                <div className={style.userQuesion}>
-                  <div>
-                    <div>
-                      <FaRegUserCircle className={style.icon} size={70} />
-                    </div>
-                    
-                    <h3 style={{ marginLeft: "15px" }}>
-                      {/* Asked by:{" "} */}
-                      {getuser.find((user) => user.userid === question.userid)
-                        ?.username || "Unknown"}
-                    </h3>
-                  </div>
-
-                  <div className={style.title}>
-                    <h3>{question.title}</h3>
-                  </div>
+            <div key={question.questionId} className={style.quesion_container}>
+              <div className={style.userQuesion}>
+                <div>
+                  <FaRegUserCircle className={style.icon} size={70} />
+                  <h3 style={{ marginLeft: "15px" }}>
+                    {getuser.find((user) => user.userid === question.userid)
+                      ?.username || "Unknown"}
+                  </h3>
                 </div>
-                <div className={style.arrow_icon}>
-                  <Link to={`/answer/${question.questionid}`}>
-                    <h2>
-                      <IoIosArrowForward size={30} />
-                    </h2>
-                  </Link>
+                <div className={style.title}>
+                  <h3>{question.title}</h3>
                 </div>
               </div>
+              <div className={style.arrow_icon}>
+                <Link to={`/answer/${question.questionid}`}>
+                  <h2>
+                    <IoIosArrowForward size={30} />
+                  </h2>
+                </Link>
               </div>
             </div>
           ))}

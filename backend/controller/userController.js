@@ -5,46 +5,89 @@ const bcrypt = require("bcrypt");
 const { StatusCodes } = require("http-status-codes");
 const jwt = require("jsonwebtoken");
 
+// async function register(req, res) {
+//   const { username, email, password, firstname, lastname } = req.body;
+//   if (!email || !password || !username || !firstname || !lastname) {
+//     //   console.log("Validation failed");
+//     return res
+//       .status(StatusCodes.BAD_REQUEST)
+//       .json({ msg: "please provide all fields" });
+//   }
+
+//   try {
+//     const [user] = await dbConnection.query(
+//       "select username,userid from users where username = ? or email = ?",
+//       [username, email]
+//     );
+//     if (user.length > 0) {
+//       return res
+//         .status(StatusCodes.BAD_REQUEST)
+//         .json({ msg: "user already registered" });
+//     }
+//     if (password.length <= 8) {
+//       return res
+//         .status(StatusCodes.BAD_REQUEST)
+//         .json({ msg: "password must be at least 8 characters" });
+//     }
+//     //encrypt  the
+//     const salt = await bcrypt.genSalt(10);
+//     const hashedPassword = await bcrypt.hash(password, salt);
+
+//     await dbConnection.query(
+//       "INSERT INTO users (username,  email, password, firstname, lastname) VALUES (?, ?, ?, ?, ? )",
+//       [username, email, hashedPassword, firstname, lastname]
+//     );
+//     return res.status(StatusCodes.CREATED).json({ msg: "user registered" });
+//   } catch (err) {
+//     console.log(err.message);
+//     return res
+//       .status(StatusCodes.INTERNAL_SERVER_ERROR)
+//       .json({ msg: "something went wrong, try again later!" });
+//   }
+// }
+
+
 async function register(req, res) {
   const { username, email, password, firstname, lastname } = req.body;
   if (!email || !password || !username || !firstname || !lastname) {
-    //   console.log("Validation failed");
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "please provide all fields" });
+      .json({ msg: "Please provide all fields" });
   }
 
   try {
     const [user] = await dbConnection.query(
-      "select username,userid from users where username = ? or email = ?",
+      "SELECT username, userid FROM users WHERE username = ? OR email = ?",
       [username, email]
     );
     if (user.length > 0) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ msg: "user already registered" });
+        .json({ msg: "User already registered" });
     }
     if (password.length <= 8) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ msg: "password must be at least 8 characters" });
+        .json({ msg: "Password must be greater than 8 characters" });
     }
-    //encrypt  the
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     await dbConnection.query(
-      "INSERT INTO users (username,  email, password, firstname, lastname) VALUES (?, ?, ?, ?, ? )",
+      "INSERT INTO users (username, email, password, firstname, lastname) VALUES (?, ?, ?, ?, ? )",
       [username, email, hashedPassword, firstname, lastname]
     );
-    return res.status(StatusCodes.CREATED).json({ msg: "user registered" });
+    return res.status(StatusCodes.CREATED).json({ msg: "User registered" });
   } catch (err) {
     console.log(err.message);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "something went wrong, try again later!" });
+      .json({ msg: "Something went wrong, try again later!" });
   }
 }
+
+
 
 async function login(req, res) {
   const { email, password } = req.body;
