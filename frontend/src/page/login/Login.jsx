@@ -4,6 +4,7 @@ import style from "../../page/style.module.css";
 import Header from "../header/Header";
 import axios from "../../axios/axiosConfig";
 import Footer from "../footer/Footer";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ function Login() {
   const [errors, setErrors] = useState({});
   const [loginError, setLoginError] = useState("");
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
@@ -62,6 +64,10 @@ function Login() {
       }
     }
   }
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   return (
     <section>
@@ -121,17 +127,25 @@ function Login() {
               />
               <br />
               <br />
-              <input
-                ref={passwordDom}
-                type="password"
-                name="password"
-                placeholder="Password"
-                style={{
-                  backgroundColor: errors.password ? "#ffebee" : "white",
-                }}
-                onBlur={handleBlur}
-                onFocus={handleFocus}
-              />
+              <div className={style.password_container}>
+                <input
+                  ref={passwordDom}
+                  type={passwordVisible ? "text" : "password"}
+                  name="password"
+                  placeholder="Password"
+                  style={{
+                    backgroundColor: errors.password ? "#ffebee" : "white",
+                  }}
+                  onBlur={handleBlur}
+                  onFocus={handleFocus}
+                />
+                <span
+                  className={style.password_toggle_icon}
+                  onClick={togglePasswordVisibility}
+                >
+                  {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
               <br />
               <br />
               <div className={style.user_register1}>

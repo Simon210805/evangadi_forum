@@ -4,6 +4,7 @@ import style from "../../page/style.module.css";
 import Header from "../header/Header";
 import axios from "../../axios/axiosConfig";
 import Footer from "../footer/Footer";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Register() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ function Register() {
   const [errors, setErrors] = useState({});
   const [registrationError, setRegistrationError] = useState("");
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
@@ -82,6 +84,10 @@ function Register() {
       }
     }
   }
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   return (
     <section>
@@ -178,18 +184,25 @@ function Register() {
                 />
               </div>
               <br />
-              <input
-                ref={passwordDom}
-                type="password"
-                name="password"
-                placeholder="Password"
-                style={{
-                  backgroundColor: errors.password ? "#ffebee" : "white",
-                }}
-                onBlur={handleBlur}
-                onFocus={handleFocus}
-              />
-              <br />
+              <div className={style.password_container}>
+                <input
+                  ref={passwordDom}
+                  type={passwordVisible ? "text" : "password"}
+                  name="password"
+                  placeholder="Password"
+                  style={{
+                    backgroundColor: errors.password ? "#ffebee" : "white",
+                  }}
+                  onBlur={handleBlur}
+                  onFocus={handleFocus}
+                />
+                <span
+                  className={style.password_toggle_icon}
+                  onClick={togglePasswordVisibility}
+                >
+                  {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
               <br />
               <button type="submit">Agree and Join</button>
             </div>

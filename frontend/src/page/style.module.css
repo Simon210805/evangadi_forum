@@ -91,6 +91,19 @@ button{
 
 
 
+/* login page */
+
+.password_container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password_toggle_icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+}
 
 
 
