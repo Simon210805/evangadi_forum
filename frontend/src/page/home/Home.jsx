@@ -20,13 +20,13 @@ function Home() {
       try {
         // Fetch user data
         const userResponse = await axios.get(
-          "http://localhost:5500/api/users/getuser"
+          "https://evangadi-forum-backend-re4e.onrender.com/api/users/getuser"
         );
         const userData = userResponse.data;
 
         // Fetch question data
         const questionResponse = await axios.get(
-          "http://localhost:5500/api/questions/getallquestions"
+          "https://evangadi-forum-backend-re4e.onrender.com/api/questions/getallquestions"
         );
         const questionData = questionResponse.data.reverse(); // Reverse once here
 

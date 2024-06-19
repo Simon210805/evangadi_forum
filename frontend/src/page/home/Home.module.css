@@ -23,8 +23,12 @@
   margin-left: 3px;
   font-size: larger;
   text-align: right;
-}
+}  
 
+.answerLink:hover {
+  background-color: #4f5052;
+  text-decoration: none;
+}
 .question_header{
   display: flex;
   justify-content: space-between;
@@ -44,7 +48,7 @@
     border-top: 1px solid black;
 }
 .question_header h1{
-  margin-top: 40px;
+  margin-top: 20px;
 }
 .arrow_icon h2{
   margin-top: 40px;
@@ -72,4 +76,20 @@
   transform: translateY(-50%);
   font-size: 20px;
   color: #aaa;
+}
+
+@media screen and (max-width: 460px) {
+  .question_header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .header h2{
+    margin-top: 20px;
+  }
 }

@@ -24,12 +24,12 @@ export default function Answer() {
       try {
         // Fetch answers from the server
         const response = await axios.get(
-          `http://localhost:5500/api/answers/getallanswer/${questionid}`
+          `https://evangadi-forum-backend-re4e.onrender.com/api/answers/getallanswer/${questionid}`
         );
 
         // Fetch question details
         const questionResponse = await axios.get(
-          "http://localhost:5500/api/questions/getallquestions"
+          "https://evangadi-forum-backend-re4e.onrender.com/api/questions/getallquestions"
         );
         const singleQuestion = questionResponse.data.find(
           (question) => question.questionid === questionid
@@ -73,7 +73,7 @@ export default function Answer() {
 
     try {
       await axios.post(
-        `http://localhost:5500/api/answers/postanswer/${questionid}`,
+        `https://evangadi-forum-backend-re4e.onrender.com/api/answers/postanswer/${questionid}`,
         {
           answer: answerValue,
           userid: user.userid,
